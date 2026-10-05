@@ -1,0 +1,172 @@
+<div class="auth-page">
+
+  <div class="auth-card">
+
+    <div class="auth-logo">
+      <i class="bi bi-check2"></i>
+    </div>
+
+    <div class="auth-heading">
+      <div class="auth-eyebrow">
+        GET STARTED
+      </div>
+
+      <h1>
+        Create account
+      </h1>
+
+      <p>
+        Create an account and start organizing your tasks.
+      </p>
+    </div>
+
+    @if (errorMessages.length > 0) {
+      <div class="auth-error">
+
+        <i class="bi bi-exclamation-circle"></i>
+
+        <div class="auth-error-messages">
+          @for (
+            message of errorMessages;
+            track message
+            ) {
+            <div>
+              {{ message }}
+            </div>
+          }
+        </div>
+
+      </div>
+    }
+
+    <form
+      [formGroup]="registerForm"
+      (ngSubmit)="submit()"
+    >
+
+      <div class="form-field">
+
+        <label for="email">
+          Email
+        </label>
+
+        <input
+          id="email"
+          type="email"
+          class="form-control"
+          formControlName="email"
+          placeholder="you@example.com"
+          autocomplete="email"
+        />
+
+        @if (
+          registerForm.controls.email.invalid &&
+          registerForm.controls.email.touched
+          ) {
+          <small>
+            Enter a valid email address.
+          </small>
+        }
+
+      </div>
+
+      <div class="form-field">
+
+        <label for="password">
+          Password
+        </label>
+
+        <input
+          id="password"
+          type="password"
+          class="form-control"
+          formControlName="password"
+          placeholder="Create a password"
+          autocomplete="new-password"
+        />
+
+        @if (
+          registerForm.controls.password.touched
+          ) {
+
+          <div class="password-hints">
+
+            <small [class.valid]="hasMinLength">
+              <i
+                class="bi"
+                [class.bi-check-circle]="hasMinLength"
+                [class.bi-circle]="!hasMinLength"
+              ></i>
+
+              At least 8 characters
+            </small>
+
+            <small [class.valid]="hasUppercase">
+              <i
+                class="bi"
+                [class.bi-check-circle]="hasUppercase"
+                [class.bi-circle]="!hasUppercase"
+              ></i>
+
+              An uppercase letter
+            </small>
+
+            <small [class.valid]="hasLowercase">
+              <i
+                class="bi"
+                [class.bi-check-circle]="hasLowercase"
+                [class.bi-circle]="!hasLowercase"
+              ></i>
+
+              A lowercase letter
+            </small>
+
+            <small
+              [class.valid]="hasSpecialCharacter"
+            >
+              <i
+                class="bi"
+                [class.bi-check-circle]="hasSpecialCharacter"
+                [class.bi-circle]="!hasSpecialCharacter"
+              ></i>
+
+              A special character
+            </small>
+
+          </div>
+
+        }
+
+      </div>
+
+      <button
+        type="submit"
+        class="btn btn-primary auth-submit"
+        [disabled]="isLoading"
+      >
+
+        @if (isLoading) {
+          <span
+            class="spinner-border spinner-border-sm"
+          ></span>
+
+          Creating account...
+        } @else {
+          Create account
+        }
+
+      </button>
+
+    </form>
+
+    <div class="auth-footer">
+      Already have an account?
+
+      <a routerLink="/login">
+        Sign in
+      </a>
+    </div>
+
+  </div>
+
+</div>

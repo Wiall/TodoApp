@@ -1,0 +1,148 @@
+<div
+  class="details-backdrop"
+  (click)="closed.emit()"
+>
+  <article
+    class="details-modal"
+    (click)="$event.stopPropagation()"
+    role="dialog"
+    aria-modal="true"
+  >
+
+    <header class="details-header">
+
+      <div class="details-eyebrow">
+        TASK DETAILS
+      </div>
+
+      <button
+        type="button"
+        class="close-button"
+        (click)="closed.emit()"
+        aria-label="Close"
+      >
+        <i class="bi bi-x-lg"></i>
+      </button>
+
+    </header>
+
+    <div class="details-status-row">
+
+      <span
+        class="task-status"
+        [class.completed]="task.isDone"
+      >
+        <i
+          class="bi"
+          [class.bi-check-circle]="task.isDone"
+          [class.bi-circle]="!task.isDone"
+        ></i>
+
+        {{ task.isDone
+        ? 'Completed'
+        : 'Active'
+        }}
+      </span>
+
+      @if (task.categoryName) {
+        <span class="task-category">
+          {{ task.categoryName }}
+        </span>
+      } @else {
+        <span class="task-category neutral">
+          No category
+        </span>
+      }
+
+    </div>
+
+    <h1>
+      {{ task.title }}
+    </h1>
+
+    @if (task.description) {
+
+      <div class="details-description">
+        {{ task.description }}
+      </div>
+
+    } @else {
+
+      <div class="details-description empty">
+        No description.
+      </div>
+
+    }
+
+    <div class="details-info">
+
+      <div class="info-item">
+
+        <span class="info-icon">
+          <i class="bi bi-calendar3"></i>
+        </span>
+
+        <div>
+          <div class="info-label">
+            Due date
+          </div>
+
+          <div class="info-value">
+            {{ formatDueDate() }}
+          </div>
+        </div>
+
+      </div>
+
+      <div class="info-item">
+
+        <span class="info-icon">
+          <i class="bi bi-clock-history"></i>
+        </span>
+
+        <div>
+          <div class="info-label">
+            Created
+          </div>
+
+          <div class="info-value">
+            {{ task.createdAt | date:'medium' }}
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <footer class="details-actions">
+
+      <button
+        type="button"
+        class="btn btn-light"
+        (click)="closed.emit()"
+      >
+        Close
+      </button>
+
+      <button
+        type="button"
+        class="btn btn-outline-primary btn-outline-color"
+        (click)="editRequested.emit(task)"
+      >
+        <i class="bi bi-pencil"></i>
+        Edit
+      </button>
+
+      <button
+        type="button"
+        class="btn btn-danger"
+        (click)="deleteRequested.emit(task)"
+      >
+        <i class="bi bi-trash"></i>
+        Delete
+      </button>
+
+    </footer>
+
+  </article>
+</div>

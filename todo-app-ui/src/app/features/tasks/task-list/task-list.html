@@ -1,0 +1,325 @@
+<div class="tasks-page">
+
+  <div class="page-heading">
+
+    <div>
+      <div class="page-eyebrow">
+        TASKS
+      </div>
+
+      <h1>
+        {{ pageTitle }}
+      </h1>
+    </div>
+
+    <button
+      type="button"
+      class="btn btn-primary app-primary-button add-task-button"
+      (click)="openCreateTaskForm()"
+    >
+      <i class="bi bi-plus-lg"></i>
+      New task
+    </button>
+
+  </div>
+
+  <div class="task-toolbar">
+
+    <div class="search-wrapper">
+
+      <i class="bi bi-search"></i>
+
+      <input
+        type="text"
+        [value]="searchTerm"
+        (input)="onSearchChange(
+        $any($event.target).value
+      )"
+        placeholder="Search tasks..."
+      />
+
+    </div>
+
+    <div class="toolbar-actions">
+
+      <div class="filter-buttons">
+
+        <button
+          type="button"
+          [class.active]="
+          selectedFilter === 'all'
+        "
+          (click)="setFilter('all')"
+        >
+          All
+        </button>
+
+        <button
+          type="button"
+          [class.active]="
+          selectedFilter === 'active'
+        "
+          (click)="setFilter('active')"
+        >
+          Active
+        </button>
+
+        <button
+          type="button"
+          [class.active]="
+          selectedFilter === 'completed'
+        "
+          (click)="setFilter('completed')"
+        >
+          Completed
+        </button>
+
+      </div>
+
+      <div class="sort-control">
+
+        <select
+          class="form-select"
+          [value]="sortBy"
+          (change)="onSortChange(
+          $any($event.target).value
+        )"
+        >
+          <option value="createdat">
+            Created
+          </option>
+
+          <option value="title">
+            Title
+          </option>
+
+          <option value="dueto">
+            Due date
+          </option>
+
+          <option value="isdone">
+            Status
+          </option>
+
+        </select>
+
+        <button
+          type="button"
+          class="sort-direction-button"
+          (click)="toggleSortDirection()"
+          aria-label="Change sort direction"
+        >
+          <i
+            class="bi"
+            [class.bi-sort-down]="sortDescending"
+            [class.bi-sort-up]="!sortDescending"
+          ></i>
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  @if (errorMessage) {
+
+    <div class="error-state">
+
+      <i class="bi bi-exclamation-circle"></i>
+
+      <span>
+        {{ errorMessage }}
+      </span>
+
+    </div>
+
+  }
+
+  @if (isLoading) {
+
+    <div class="loading-state">
+
+      <div
+        class="spinner-border"
+        role="status"
+        aria-hidden="true"
+      ></div>
+
+      <span>
+        Loading tasks...
+      </span>
+
+    </div>
+
+  } @else {
+
+    <div class="tasks-count">
+
+      {{ totalCount }}
+      {{ totalCount === 1
+      ? 'task'
+      : 'tasks'
+      }}
+
+    </div>
+
+    <div class="task-list">
+
+      @for (
+        task of tasks;
+        track task.id
+        ) {
+
+        <app-task-card
+          [task]="task"
+          [categories]="categories"
+          [categorySelection]="categorySelection"
+          (saveRequested)="saveInlineTask($event)"
+          (deleteRequested)="requestDelete($event)"
+          (openRequested)="openTask($event)"
+        />
+
+      } @empty {
+
+        <div class="empty-state">
+
+          <div class="empty-icon">
+            <i class="bi bi-check2-circle"></i>
+          </div>
+
+          <h2>
+            No tasks yet
+          </h2>
+
+          <p>
+            Create your first task to get started.
+          </p>
+
+          <button
+            type="button"
+            class="btn btn-primary app-primary-button btn-color"
+            (click)="openCreateTaskForm()"
+          >
+            <i class="bi bi-plus-lg"></i>
+            Create task
+          </button>
+
+        </div>
+
+      }
+
+    </div>
+    @if (
+      !isLoading &&
+      totalPages > 0
+      ) {
+
+      <div class="pagination-container">
+
+        <div class="page-size">
+
+      <span>
+        Per page
+      </span>
+
+          <select
+            class="form-select"
+            [ngModel]="pageSize"
+            (ngModelChange)="changePageSize($event)"
+          >
+            @for (
+              size of pageSizes;
+              track size
+              ) {
+              <option [ngValue]="size">
+                {{ size }}
+              </option>
+            }
+          </select>
+
+        </div>
+
+        <div class="pagination-buttons">
+
+          <button
+            type="button"
+            [disabled]="currentPage === 1"
+            (click)="goToPage(currentPage - 1)"
+            aria-label="Previous page"
+          >
+            <i class="bi bi-chevron-left"></i>
+          </button>
+
+          @for (
+            page of paginationPages;
+            track page
+            ) {
+
+            <button
+              type="button"
+              [class.active]="
+            page === currentPage
+          "
+              (click)="goToPage(page)"
+            >
+              {{ page }}
+            </button>
+
+          }
+
+          <button
+            type="button"
+            [disabled]="
+          currentPage === totalPages
+        "
+            (click)="goToPage(currentPage + 1)"
+            aria-label="Next page"
+          >
+            <i class="bi bi-chevron-right"></i>
+          </button>
+
+        </div>
+
+      </div>
+
+    }
+
+  }
+
+</div>
+
+@if (selectedTask) {
+
+  <app-task-details
+    [task]="selectedTask"
+    (closed)="closeTaskDetails()"
+    (editRequested)="openEditTaskForm($event)"
+    (deleteRequested)="requestDelete($event)"
+  />
+
+}
+
+@if (showTaskForm) {
+
+  <app-task-form
+    [task]="editingTask"
+    [categories]="categories"
+    [categorySelection]="categorySelection"
+    (saved)="saveTask($event)"
+    (cancelled)="closeTaskForm()"
+  />
+
+}
+
+@if (deletingTask) {
+
+  <app-confirm-dialog
+    title="Delete this task?"
+    message="This task will be permanently deleted."
+    confirmText="Delete task"
+    (confirmed)="confirmDelete()"
+    (cancelled)="cancelDelete()"
+  />
+
+}

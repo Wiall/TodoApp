@@ -1,0 +1,42 @@
+<div
+  class="app-shell"
+  [class.sidebar-open]="isSidebarOpen"
+  [class.sidebar-closed]="!isSidebarOpen"
+>
+  <div
+    class="sidebar-container"
+    [class.open]="isSidebarOpen"
+    [class.closed]="!isSidebarOpen"
+  >
+    <app-sidebar
+      [isOpen]="isSidebarOpen"
+      (toggleRequested)="toggleSidebar()"
+      (categorySelected)="selectCategory($event)"
+    />
+  </div>
+
+  <main class="main-content">
+
+    <header class="top-bar">
+
+      @if (!isSidebarOpen) {
+        <button
+          type="button"
+          class="icon-button"
+          (click)="toggleSidebar()"
+          aria-label="Open sidebar"
+        >
+          <i class="bi bi-list"></i>
+        </button>
+      }
+
+    </header>
+
+    <section class="page-content">
+      <app-task-list
+        [categorySelection]="selectedCategory"
+      />
+    </section>
+
+  </main>
+</div>

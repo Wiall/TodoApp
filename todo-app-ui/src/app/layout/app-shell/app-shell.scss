@@ -1,0 +1,123 @@
+:host {
+  display: block;
+  min-height: 100dvh;
+}
+
+.app-shell {
+  display: flex;
+  min-height: 100dvh;
+  background: var(--app-background);
+}
+
+.sidebar-container {
+  position: sticky;
+  top: 0;
+
+  width: 280px;
+  min-width: 280px;
+  height: 100dvh;
+
+  z-index: 1;
+
+  align-self: flex-start;
+  flex-shrink: 0;
+
+  overflow: hidden;
+
+  transition:
+    width 0.25s ease,
+    min-width 0.25s ease;
+}
+
+.sidebar-container.closed {
+  width: 0;
+  min-width: 0;
+}
+
+.main-content {
+  flex: 1;
+  min-width: 0;
+  min-height: 100dvh;
+}
+
+.top-bar {
+  height: 72px;
+  padding: 0 28px;
+
+  display: flex;
+  align-items: center;
+  gap: 16px;
+
+  background: var(--app-surface);
+  border-bottom: 1px solid var(--app-border);
+}
+
+.icon-button {
+  width: 42px;
+  height: 42px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 0;
+  border-radius: 12px;
+
+  background: transparent;
+  color: var(--app-text);
+
+  font-size: 24px;
+  cursor: pointer;
+
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.icon-button:hover {
+  background: var(--app-primary-light);
+  color: var(--app-primary);
+}
+
+.top-bar-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.brand-dot {
+  width: 10px;
+  height: 10px;
+
+  border-radius: 50%;
+  background: var(--app-primary);
+}
+
+.page-content {
+  padding: 32px;
+}
+
+@media (max-width: 767.98px) {
+  .sidebar-container {
+    width: 0;
+    min-width: 0;
+    overflow: visible;
+  }
+
+  .sidebar-container.open {
+    width: 0;
+    min-width: 0;
+  }
+
+  .top-bar {
+    height: 64px;
+    padding: 0 16px;
+  }
+
+  .page-content {
+    padding: 20px 16px;
+  }
+}

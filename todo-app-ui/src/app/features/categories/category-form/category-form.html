@@ -1,0 +1,110 @@
+<div class="modal-backdrop">
+
+  <div
+    class="category-modal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="category-modal-title"
+  >
+
+    <div class="modal-header">
+
+      <div>
+        <div class="modal-eyebrow">
+          CATEGORY
+        </div>
+
+        <h2 id="category-modal-title">
+          {{ isEditMode
+          ? 'Edit category'
+          : 'New category'
+          }}
+        </h2>
+      </div>
+
+      <button
+        type="button"
+        class="close-button"
+        (click)="cancel()"
+        aria-label="Close"
+      >
+        <i class="bi bi-x-lg"></i>
+      </button>
+
+    </div>
+
+    <form
+      [formGroup]="categoryForm"
+      (ngSubmit)="submit()"
+    >
+
+      <div class="form-field">
+
+        <label for="category-name">
+          Name
+        </label>
+
+        <input
+          id="category-name"
+          type="text"
+          class="form-control"
+          formControlName="name"
+          placeholder="e.g. Work"
+        />
+
+        @if (
+          categoryForm.controls['name'].invalid &&
+          categoryForm.controls['name'].touched
+          ) {
+
+          <small>
+            Category name is required.
+          </small>
+
+        }
+
+      </div>
+
+      <div class="form-field">
+
+        <label for="category-description">
+          Description
+        </label>
+
+        <textarea
+          id="category-description"
+          class="form-control"
+          rows="4"
+          formControlName="description"
+          placeholder="What is this category for?"
+        ></textarea>
+
+      </div>
+
+      <div class="modal-actions">
+
+        <button
+          type="button"
+          class="btn btn-light"
+          (click)="cancel()"
+        >
+          Cancel
+        </button>
+
+        <button
+          type="submit"
+          class="btn btn-primary app-primary-button"
+        >
+          {{ isEditMode
+          ? 'Save changes'
+          : 'Create category'
+          }}
+        </button>
+
+      </div>
+
+    </form>
+
+  </div>
+
+</div>

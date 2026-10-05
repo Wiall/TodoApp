@@ -1,0 +1,211 @@
+<div class="modal-backdrop">
+
+  <div
+    class="task-modal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="task-modal-title"
+  >
+
+    <div class="modal-header">
+
+      <div>
+        <div class="modal-eyebrow">
+          TASK
+        </div>
+
+        <h2 id="task-modal-title">
+          {{ isEditMode
+          ? 'Edit task'
+          : 'New task'
+          }}
+        </h2>
+      </div>
+
+      <button
+        type="button"
+        class="close-button"
+        (click)="cancel()"
+        aria-label="Close"
+      >
+        <i class="bi bi-x-lg"></i>
+      </button>
+
+    </div>
+
+    <form
+      [formGroup]="taskForm"
+      (ngSubmit)="submit()"
+    >
+
+      <div class="form-field">
+
+        <label for="task-title">
+          Title
+        </label>
+
+        <input
+          id="task-title"
+          type="text"
+          class="form-control"
+          formControlName="title"
+          placeholder="Task title..."
+          autofocus
+        />
+
+        @if (
+          taskForm.controls["title"].invalid &&
+          taskForm.controls["title"].touched
+          ) {
+          <small>
+            Task title is required.
+          </small>
+        }
+
+      </div>
+
+      <div class="form-field">
+
+        <label for="task-description">
+          Description
+        </label>
+
+        <textarea
+          id="task-description"
+          class="form-control"
+          rows="5"
+          formControlName="description"
+          placeholder="Task description..."
+        ></textarea>
+
+      </div>
+
+      <div class="form-row">
+
+        @if (canChooseCategory) {
+
+          <div class="form-field">
+
+            <label for="task-category">
+              Category
+            </label>
+
+            <select
+              id="task-category"
+              class="form-select"
+              formControlName="categoryId"
+            >
+
+              <option [ngValue]="null">
+                No category
+              </option>
+
+              @for (
+                category of categories;
+                track category.id
+                ) {
+
+                <option
+                  [ngValue]="category.id"
+                >
+                  {{ category.name }}
+                </option>
+
+              }
+
+            </select>
+
+          </div>
+
+        } @else {
+
+          <div class="form-field">
+
+            <label>
+              Category
+            </label>
+
+            <div class="fixed-category">
+
+              @if (
+                categorySelection === 'none'
+                ) {
+
+                <i class="bi bi-circle"></i>
+
+                <span>
+          No category
+        </span>
+
+              } @else {
+
+                <i class="bi bi-folder2"></i>
+
+                <span>
+          @for (
+            category of categories;
+            track category.id
+            ) {
+
+            @if (
+              category.id ===
+              categorySelection
+              ) {
+              {{ category.name }}
+            }
+
+          }
+        </span>
+
+              }
+
+            </div>
+
+          </div>
+
+        }
+
+        <div class="form-field">
+
+          <label for="task-due">
+            Due date
+          </label>
+
+          <input
+            id="task-due"
+            type="datetime-local"
+            class="form-control"
+            formControlName="dueTo"
+          />
+
+        </div>
+
+      </div>
+
+      <div class="modal-actions">
+
+        <button
+          type="button"
+          class="btn btn-light"
+          (click)="cancel()"
+        >
+          Cancel
+        </button>
+
+        <button
+          type="submit"
+          class="btn btn-primary app-primary-button"
+        >
+          {{ isEditMode
+          ? 'Save changes'
+          : 'Create task'
+          }}
+        </button>
+
+      </div>
+
+    </form>
+
+  </div>
+
+</div>

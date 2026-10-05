@@ -1,0 +1,78 @@
+:host {
+  display: block;
+}
+
+.dialog-backdrop {
+  position: fixed;
+  inset: 0;
+
+  z-index: 3000;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 20px;
+
+  background: rgba(37, 38, 55, 0.38);
+}
+
+.confirm-dialog {
+  width: 100%;
+  max-width: 400px;
+
+  padding: 28px;
+
+  border: 1px solid var(--app-border);
+  border-radius: 20px;
+
+  background: var(--app-surface);
+
+  box-shadow:
+    0 24px 70px rgba(37, 38, 55, 0.18);
+
+  text-align: center;
+}
+
+.dialog-icon {
+  width: 52px;
+  height: 52px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin: 0 auto 18px;
+
+  border-radius: 15px;
+
+  background: #fff1f1;
+  color: var(--app-danger);
+
+  font-size: 22px;
+}
+
+.confirm-dialog h2 {
+  margin: 0;
+
+  font-size: 21px;
+}
+
+.confirm-dialog p {
+  margin: 8px 0 24px;
+
+  color: var(--app-text-secondary);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.dialog-actions .btn-danger {
+  background: var(--app-danger);
+  border-color: var(--app-danger);
+}

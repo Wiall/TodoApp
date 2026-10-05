@@ -1,0 +1,163 @@
+@if (!isEditing) {
+
+  <article
+    class="task-card"
+    [class.completed]="task.isDone"
+  >
+
+    <button
+      type="button"
+      class="task-check"
+      (click)="toggleDone()"
+      [attr.aria-label]="
+        task.isDone
+          ? 'Mark as active'
+          : 'Mark as completed'
+      "
+    >
+      @if (task.isDone) {
+        <i class="bi bi-check-lg"></i>
+      }
+    </button>
+
+    <button
+      type="button"
+      class="task-content"
+      (click)="openTask()"
+    >
+
+      <div class="task-title">
+        {{ task.title }}
+      </div>
+
+      @if (task.description) {
+        <div class="task-description">
+          {{ task.description }}
+        </div>
+      }
+
+      <div class="task-meta">
+
+        @if (task.dueTo) {
+          <span class="task-due">
+            <i class="bi bi-calendar3"></i>
+            {{ formatDueDate() }}
+          </span>
+        }
+        @if (categorySelection === 'all') {
+          @if (task.categoryName) {
+            <span class="task-category">
+              {{ task.categoryName }}
+            </span>
+          } @else {
+            <span class="task-category neutral">
+              No category
+            </span>
+          }
+        }
+
+      </div>
+
+    </button>
+
+    <div class="task-actions">
+
+      <button
+        type="button"
+        class="task-action-button"
+        (click)="startEditing()"
+        aria-label="Edit task"
+      >
+        <i class="bi bi-pencil"></i>
+      </button>
+
+      <button
+        type="button"
+        class="task-action-button danger"
+        (click)="deleteTask()"
+        aria-label="Delete task"
+      >
+        <i class="bi bi-trash"></i>
+      </button>
+
+    </div>
+
+  </article>
+
+} @else {
+
+  <article class="task-card editing">
+
+    <div class="edit-form">
+
+      <input
+        type="text"
+        class="form-control"
+        [(ngModel)]="editTitle"
+        placeholder="Task title"
+      />
+
+      <textarea
+        class="form-control"
+        [(ngModel)]="editDescription"
+        rows="3"
+        placeholder="Description"
+      ></textarea>
+
+      <div class="edit-row">
+
+        <select
+          class="form-select"
+          [(ngModel)]="editCategoryId"
+        >
+
+          <option [ngValue]="null">
+            No category
+          </option>
+
+          @for (
+            category of categories;
+            track category.id
+            ) {
+            <option
+              [ngValue]="category.id"
+            >
+              {{ category.name }}
+            </option>
+          }
+
+        </select>
+
+        <input
+          type="datetime-local"
+          class="form-control"
+          [(ngModel)]="editDueTo"
+        />
+
+      </div>
+
+      <div class="edit-actions">
+
+        <button
+          type="button"
+          class="btn btn-light"
+          (click)="cancelEditing()"
+        >
+          Cancel
+        </button>
+
+        <button
+          type="button"
+          class="btn btn-primary app-primary-button"
+          (click)="saveEditing()"
+        >
+          Save
+        </button>
+
+      </div>
+
+    </div>
+
+  </article>
+
+}

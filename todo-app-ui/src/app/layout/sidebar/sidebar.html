@@ -1,0 +1,198 @@
+<aside
+  class="sidebar"
+  [class.open]="isOpen"
+  [class.closed]="!isOpen"
+>
+  <div class="sidebar-header">
+
+    <div class="sidebar-title">
+      <div class="sidebar-logo">
+        <i class="bi bi-check2"></i>
+      </div>
+
+      <div>
+        <div class="sidebar-app-name">
+          My Tasks
+        </div>
+      </div>
+    </div>
+
+    <button
+      type="button"
+      class="sidebar-toggle-button"
+      (click)="toggleRequested.emit()"
+      aria-label="Close sidebar"
+    >
+      <i class="bi bi-layout-sidebar-inset"></i>
+    </button>
+
+  </div>
+
+  <div class="sidebar-section-title">
+    Categories
+  </div>
+
+  @if (isLoading) {
+
+    <div class="sidebar-loading">
+      Loading categories...
+    </div>
+
+  } @else if (errorMessage) {
+
+    <div class="sidebar-error">
+      {{ errorMessage }}
+    </div>
+
+  } @else {
+    <nav class="special-category-list">
+
+      <button
+        type="button"
+        class="special-category-button"
+        [class.selected]="selectedCategoryId === '__all__'"
+        (click)="selectAllTasks()"
+      >
+        <i class="bi bi-inbox"></i>
+        <span>All tasks</span>
+      </button>
+
+      <button
+        type="button"
+        class="special-category-button"
+        [class.selected]="selectedCategoryId === '__none__'"
+        (click)="selectNoCategory()"
+      >
+        <i class="bi bi-circle"></i>
+        <span>No category</span>
+      </button>
+
+    </nav>
+
+    <nav class="category-list">
+
+      @for (category of categories; track category.id) {
+
+        <div
+          class="category-item"
+          [class.selected]="
+            selectedCategoryId === category.id
+          "
+        >
+
+          <button
+            type="button"
+            class="category-main-button"
+            (click)="selectCategory(category.id)"
+          >
+            <span class="category-icon">
+              <i class="bi bi-circle-fill"></i>
+            </span>
+
+            <span class="category-name">
+              {{ category.name }}
+            </span>
+          </button>
+
+          <button
+            type="button"
+            class="category-menu-button"
+            (click)="toggleCategoryMenu(category.id)"
+            aria-label="Category actions"
+          >
+            <i class="bi bi-three-dots-vertical"></i>
+          </button>
+
+          @if (activeMenuId === category.id) {
+
+            <div class="category-menu">
+
+              <button
+                type="button"
+                (click)="openEditCategoryForm(category)"
+              >
+                <i class="bi bi-pencil"></i>
+                Edit
+              </button>
+
+              <button
+                type="button"
+                class="danger"
+                (click)="requestDeleteCategory(category)"
+              >
+                <i class="bi bi-trash"></i>
+                Delete
+              </button>
+
+            </div>
+
+          }
+
+        </div>
+
+      } @empty {
+
+        <div class="empty-categories">
+          No categories yet.
+        </div>
+
+      }
+
+    </nav>
+  }
+
+  <button
+    type="button"
+    class="add-category-button"
+    (click)="openCreateCategoryForm()"
+  >
+    <i class="bi bi-plus-lg"></i>
+    <span>New category</span>
+  </button>
+
+  <div class="sidebar-footer">
+
+    <button
+      type="button"
+      class="logout-button"
+      (click)="logout()"
+    >
+      <i class="bi bi-box-arrow-right"></i>
+      <span>Log out</span>
+    </button>
+
+  </div>
+</aside>
+
+@if (isOpen) {
+  <div
+    class="sidebar-overlay"
+    (click)="toggleRequested.emit()"
+  ></div>
+}
+
+@if (showCategoryForm) {
+
+  <app-category-form
+    [category]="editingCategory"
+    (saved)="createOrUpdateCategory($event)"
+    (cancelled)="closeCategoryForm()"
+  />
+
+}
+
+@if (deletingCategory) {
+
+  <app-confirm-dialog
+    title="Delete this category?"
+    [message]="
+      'Category &quot;' +
+      deletingCategory.name +
+      '&quot; will be permanently deleted.'
+    "
+    confirmText="Delete category"
+    (confirmed)="confirmDeleteCategory()"
+    (cancelled)="cancelDeleteCategory()"
+  />
+
+}
